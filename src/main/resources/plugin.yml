@@ -1,0 +1,15 @@
+name: SManager
+version: 1.0.0
+main: com.aoao.smanager.SManagerPlugin
+api-version: '1.21'
+authors:
+  - Aoao
+commands:
+  smanager:
+    description: SManager control
+    usage: /smanager reload
+    permission: smanager.admin
+permissions:
+  smanager.admin:
+    description: Admin permission for SManager
+    default: op

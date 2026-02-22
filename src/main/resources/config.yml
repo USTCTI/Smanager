@@ -1,0 +1,6 @@
+monitor:
+  intervalMillis: 1000
+web:
+  port: 25566
+auth:
+  token: ""

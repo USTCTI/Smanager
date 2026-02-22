@@ -1,0 +1,5 @@
+com\aoao\smanager\monitor\MetricsSnapshot.class
+com\aoao\smanager\monitor\MetricsCollector.class
+com\aoao\smanager\web\WebServer$1.class
+com\aoao\smanager\SManagerPlugin.class
+com\aoao\smanager\web\WebServer.class
