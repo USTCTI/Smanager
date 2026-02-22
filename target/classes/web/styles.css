@@ -96,11 +96,239 @@ body{
   opacity:.8;
   font-size:12px;
 }
+
+.nav {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #e9eef5;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.nav-btn.active {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.file-manager {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25) inset, 0 10px 20px rgba(0,0,0,.2);
+}
+
+.file-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #e9eef5;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.path-bar {
+  margin-left: auto;
+  font-family: monospace;
+  background: rgba(0,0,0,0.3);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.file-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.file-table th {
+  text-align: left;
+  padding: 12px;
+  background: rgba(0,0,0,0.3);
+  font-weight: 600;
+}
+
+.file-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.file-table tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.file-table .loading {
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+}
+
+.file-icon {
+  margin-right: 8px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.file-editor {
+  margin-top: 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.3);
+}
+
+.editor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editor-textarea {
+  width: 100%;
+  height: 400px;
+  background: rgba(0,0,0,0.2);
+  border: none;
+  color: #e9eef5;
+  padding: 16px;
+  font-family: monospace;
+  resize: vertical;
+  outline: none;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: rgba(30,41,59,0.95);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.close {
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.close:hover {
+  opacity: 1;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: #e9eef5;
+  outline: none;
+}
+
 @media (max-width:1024px){
   .big{grid-column:span 12}
   .card{grid-column:span 6}
+  .file-toolbar {
+    flex-wrap: wrap;
+  }
 }
 @media (max-width:640px){
   .card{grid-column:span 12}
+  .nav {
+    margin-left: 0;
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 

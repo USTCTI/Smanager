@@ -1,5 +1,11 @@
-com\aoao\smanager\monitor\MetricsSnapshot.class
-com\aoao\smanager\monitor\MetricsCollector.class
-com\aoao\smanager\web\WebServer$1.class
-com\aoao\smanager\SManagerPlugin.class
 com\aoao\smanager\web\WebServer.class
+com\aoao\smanager\file\FileManager$1.class
+com\aoao\smanager\monitor\MetricsSnapshot.class
+com\aoao\smanager\file\FileManager$FileContentResponse.class
+com\aoao\smanager\monitor\MetricsCollector.class
+com\aoao\smanager\file\FileManager$FileListResponse.class
+com\aoao\smanager\web\WebServer$1.class
+com\aoao\smanager\file\FileManager$FileInfo.class
+com\aoao\smanager\file\FileManager.class
+com\aoao\smanager\SManagerPlugin.class
+com\aoao\smanager\file\FileManager$BasicResponse.class

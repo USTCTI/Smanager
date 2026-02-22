@@ -14,84 +14,154 @@
     <header class="header">
       <div class="title">SManager</div>
       <div class="subtitle">Paper 1.21.x 系统监控</div>
+      <nav class="nav">
+        <button class="nav-btn active" data-tab="dashboard">仪表板</button>
+        <button class="nav-btn" data-tab="files">文件管理</button>
+      </nav>
     </header>
-    <main class="grid">
-      <section class="card big">
-        <div class="card-title">CPU</div>
-        <div class="metric-row">
-          <div class="metric">
-            <div class="metric-value" id="cpuUsage">--%</div>
-            <div class="metric-label">使用率</div>
+    
+    <main>
+      <div id="dashboard" class="tab-content active">
+        <div class="grid">
+          <section class="card big">
+            <div class="card-title">CPU</div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="metric-value" id="cpuUsage">--%</div>
+                <div class="metric-label">使用率</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="loadAvg">--</div>
+                <div class="metric-label">平均负载</div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="bar-fill" id="cpuBar"></div>
+            </div>
+          </section>
+          <section class="card">
+            <div class="card-title">内存</div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="metric-value" id="memUsed">--</div>
+                <div class="metric-label">已用</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="memFree">--</div>
+                <div class="metric-label">空闲</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="memTotal">--</div>
+                <div class="metric-label">总计</div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="bar-fill" id="memBar"></div>
+            </div>
+          </section>
+          <section class="card">
+            <div class="card-title">磁盘</div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="metric-value" id="diskUsed">--</div>
+                <div class="metric-label">已用</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="diskFree">--</div>
+                <div class="metric-label">空闲</div>
+              </div>
+            </div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="metric-value" id="diskR">--/s</div>
+                <div class="metric-label">读取</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="diskW">--/s</div>
+                <div class="metric-label">写入</div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <div class="card-title">网络</div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="metric-value" id="netUp">--/s</div>
+                <div class="metric-label">上传</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value" id="netDown">--/s</div>
+                <div class="metric-label">下载</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      
+      <div id="files" class="tab-content">
+        <div class="file-manager">
+          <div class="file-toolbar">
+            <button id="refreshFiles" class="btn">刷新</button>
+            <button id="createFile" class="btn">新建文件</button>
+            <button id="createFolder" class="btn">新建文件夹</button>
+            <button id="uploadFile" class="btn">上传文件</button>
+            <input type="file" id="fileUpload" style="display: none;">
+            <div class="path-bar">
+              <span id="currentPath">/</span>
+            </div>
           </div>
-          <div class="metric">
-            <div class="metric-value" id="loadAvg">--</div>
-            <div class="metric-label">平均负载</div>
+          <div class="file-list-container">
+            <table class="file-table">
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th>大小</th>
+                  <th>修改时间</th>
+                  <th>权限</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="fileList">
+                <tr>
+                  <td colspan="5" class="loading">加载中...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="bar">
-          <div class="bar-fill" id="cpuBar"></div>
+        
+        <div id="fileEditor" class="file-editor" style="display: none;">
+          <div class="editor-header">
+            <span id="editorTitle">文件编辑器</span>
+            <div class="editor-actions">
+              <button id="saveFile" class="btn">保存</button>
+              <button id="closeEditor" class="btn">关闭</button>
+            </div>
+          </div>
+          <textarea id="fileContent" class="editor-textarea"></textarea>
         </div>
-      </section>
-      <section class="card">
-        <div class="card-title">内存</div>
-        <div class="metric-row">
-          <div class="metric">
-            <div class="metric-value" id="memUsed">--</div>
-            <div class="metric-label">已用</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value" id="memFree">--</div>
-            <div class="metric-label">空闲</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value" id="memTotal">--</div>
-            <div class="metric-label">总计</div>
-          </div>
-        </div>
-        <div class="bar">
-          <div class="bar-fill" id="memBar"></div>
-        </div>
-      </section>
-      <section class="card">
-        <div class="card-title">磁盘</div>
-        <div class="metric-row">
-          <div class="metric">
-            <div class="metric-value" id="diskUsed">--</div>
-            <div class="metric-label">已用</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value" id="diskFree">--</div>
-            <div class="metric-label">空闲</div>
-          </div>
-        </div>
-        <div class="metric-row">
-          <div class="metric">
-            <div class="metric-value" id="diskR">--/s</div>
-            <div class="metric-label">读取</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value" id="diskW">--/s</div>
-            <div class="metric-label">写入</div>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <div class="card-title">网络</div>
-        <div class="metric-row">
-          <div class="metric">
-            <div class="metric-value" id="netUp">--/s</div>
-            <div class="metric-label">上传</div>
-          </div>
-          <div class="metric">
-            <div class="metric-value" id="netDown">--/s</div>
-            <div class="metric-label">下载</div>
-          </div>
-        </div>
-      </section>
+      </div>
     </main>
+    
     <footer class="footer">
       <span id="status">连接中</span>
     </footer>
+  </div>
+  
+  <div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">标题</h3>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="modalForm"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalConfirm" class="btn">确认</button>
+        <button id="modalCancel" class="btn">取消</button>
+      </div>
+    </div>
   </div>
   <script src="/app.js"></script>
 </body>

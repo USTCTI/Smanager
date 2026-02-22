@@ -1,5 +1,6 @@
 package com.aoao.smanager.web;
 
+import com.aoao.smanager.file.FileManager;
 import com.aoao.smanager.monitor.MetricsSnapshot;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
@@ -16,6 +17,9 @@ import io.undertow.websockets.core.WebSockets;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
 import org.slf4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -32,6 +36,7 @@ public class WebServer {
     private final int port;
     private final String token;
     private final Logger logger;
+    private final FileManager fileManager;
     private Undertow server;
     private final Set<WebSocketChannel> channels = Collections.synchronizedSet(new HashSet<>());
     private ScheduledExecutorService scheduler;
@@ -41,6 +46,7 @@ public class WebServer {
         this.port = port;
         this.token = token == null ? "" : token.trim();
         this.logger = logger;
+        this.fileManager = new FileManager(logger);
     }
 
     public void start() {
@@ -53,8 +59,79 @@ public class WebServer {
             exchange.setStatusCode(StatusCodes.OK);
             exchange.getResponseSender().send(json);
         };
+        
+        HttpHandler apiFilesList = exchange -> {
+            if (!authorize(exchange)) return;
+            String path = getQueryParam(exchange, "path", "/");
+            String response = fileManager.listFiles(path);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+            exchange.setStatusCode(StatusCodes.OK);
+            exchange.getResponseSender().send(response);
+        };
+        
+        HttpHandler apiFileRead = exchange -> {
+            if (!authorize(exchange)) return;
+            String path = getQueryParam(exchange, "path", "");
+            String response = fileManager.readFile(path);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+            exchange.setStatusCode(StatusCodes.OK);
+            exchange.getResponseSender().send(response);
+        };
+        
+        HttpHandler apiFileWrite = exchange -> {
+            if (!authorize(exchange)) return;
+            exchange.getRequestReceiver().receiveFullBytes((ex, data) -> {
+                try {
+                    String body = new String(data, StandardCharsets.UTF_8);
+                    String path = getQueryParam(exchange, "path", "");
+                    String response = fileManager.writeFile(path, body);
+                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+                    exchange.setStatusCode(StatusCodes.OK);
+                    exchange.getResponseSender().send(response);
+                } catch (Exception e) {
+                    exchange.setStatusCode(StatusCodes.BAD_REQUEST);
+                    exchange.getResponseSender().send("{\"success\":false,\"message\":\"请求格式错误\"}");
+                }
+            });
+        };
+        
+        HttpHandler apiFileCreate = exchange -> {
+            if (!authorize(exchange)) return;
+            String path = getQueryParam(exchange, "path", "");
+            boolean isDirectory = "true".equals(getQueryParam(exchange, "isDirectory", "false"));
+            String response = fileManager.createFile(path, isDirectory);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+            exchange.setStatusCode(StatusCodes.OK);
+            exchange.getResponseSender().send(response);
+        };
+        
+        HttpHandler apiFileDelete = exchange -> {
+            if (!authorize(exchange)) return;
+            String path = getQueryParam(exchange, "path", "");
+            String response = fileManager.deleteFile(path);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+            exchange.setStatusCode(StatusCodes.OK);
+            exchange.getResponseSender().send(response);
+        };
+        
+        HttpHandler apiFileRename = exchange -> {
+            if (!authorize(exchange)) return;
+            String path = getQueryParam(exchange, "path", "");
+            String newName = getQueryParam(exchange, "newName", "");
+            String response = fileManager.renameFile(path, newName);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json;charset=utf-8");
+            exchange.setStatusCode(StatusCodes.OK);
+            exchange.getResponseSender().send(response);
+        };
+        
         PathHandler path = Handlers.path()
                 .addPrefixPath("/api/metrics", apiMetrics)
+                .addPrefixPath("/api/files/list", apiFilesList)
+                .addPrefixPath("/api/files/read", apiFileRead)
+                .addPrefixPath("/api/files/write", apiFileWrite)
+                .addPrefixPath("/api/files/create", apiFileCreate)
+                .addPrefixPath("/api/files/delete", apiFileDelete)
+                .addPrefixPath("/api/files/rename", apiFileRename)
                 .addPrefixPath("/", staticHandler)
                 .addExactPath("/api/health", exchange -> {
                     if (!authorize(exchange)) return;
@@ -143,5 +220,13 @@ public class WebServer {
         String q = (list != null && !list.isEmpty()) ? list.get(0) : null;
         if (q != null && q.equals(token)) return true;
         return false;
+    }
+    
+    private String getQueryParam(HttpServerExchange exchange, String paramName, String defaultValue) {
+        Deque<String> values = exchange.getQueryParameters().get(paramName);
+        if (values != null && !values.isEmpty()) {
+            return values.getFirst();
+        }
+        return defaultValue;
     }
 }
